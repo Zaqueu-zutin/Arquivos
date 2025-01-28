@@ -24,8 +24,8 @@
         },
         "osProfile": {
           "computerName": "myAlfrescoVM",
-          "adminUsername": "admmaster",
-          "adminPassword": "!QAZ2wsx#EDC4rfv"
+          "adminUsername": "azureuser",
+          "adminPassword": "YourPassword123!"
         },
         "networkProfile": {
           "networkInterfaces": [
@@ -47,7 +47,7 @@
         "typeHandlerVersion": "2.0",
         "settings": {
           "fileUris": [
-            "https://github.com/Zaqueu-zutin/Arquivos/alfresco-vm-templete.json"
+            "https://github.com/Zaqueu-zutin/Arquivos/alfresco-install-script.sh"
           ],
           "commandToExecute": "sh alfresco-install-script.sh"
         }
