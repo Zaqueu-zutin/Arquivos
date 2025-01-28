@@ -24,8 +24,8 @@
         },
         "osProfile": {
           "computerName": "myAlfrescoVM",
-          "adminUsername": "azureuser",
-          "adminPassword": "YourPassword123!"
+          "adminUsername": "admmaster",
+          "adminPassword": "!QAZ2wsx#EDC4rfv"
         },
         "networkProfile": {
           "networkInterfaces": [
