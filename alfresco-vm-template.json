@@ -48,7 +48,7 @@
         "typeHandlerVersion": "2.0",
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/your-repo/alfresco-install-script.sh"
+            "https://github.com/Zaqueu-zutin/Arquivos/alfresco-install-script.sh"
           ],
           "commandToExecute": "sh alfresco-install-script.sh"
         }
