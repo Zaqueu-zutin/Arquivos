@@ -1,58 +1,29 @@
 
-{
-  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-  "resources": [
-    {
-      "type": "Microsoft.Compute/virtualMachines",
-      "apiVersion": "2021-07-01",
-      "name": "myAlfrescoVM",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "hardwareProfile": {
-          "vmSize": "Standard_B1s"
-        },
-        "storageProfile": {
-          "imageReference": {
-            "publisher": "Canonical",
-            "offer": "UbuntuServer",
-            "sku": "18.04-LTS",
-            "version": "latest"
-          },
-          "osDisk": {
-            "createOption": "FromImage"
-          }
-        },
-        "osProfile": {
-          "computerName": "AlfrescoVM",
-          "adminUsername": "admuser",
-          "adminPassword": "!QAZ2wsx#EDC4rfv"
-        },
-        "networkProfile": {
-          "networkInterfaces": [
-            {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', 'AlfrescoVMNic')]"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "apiVersion": "2021-07-01",
-      "name": "AlfrescoVM/installAlfresco",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "publisher": "Microsoft.Azure.Extensions",
-        "type": "CustomScript",
-        "typeHandlerVersion": "2.0",
-        "settings": {
-          "fileUris": [
-            "https://raw.githubusercontent.com/your-repo/alfresco-install-script.sh"
-          ],
-          "commandToExecute": "sh alfresco-install-script.sh"
-        }
-      }
-    }
-  ]
-}
+#!/bin/bash
+
+# Atualizar pacotes e instalar dependências
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y openjdk-11-jdk wget unzip postgresql libfontconfig1
+
+# Baixar o instalador do Alfresco
+wget https://download.alfresco.com/release/community/7.4/alfresco-content-services-community-7.4-installer-linux-x64.bin
+chmod +x alfresco-content-services-community-7.4-installer-linux-x64.bin
+
+# Configurar o banco de dados PostgreSQL
+sudo -u postgres psql <<EOF
+CREATE DATABASE alfresco;
+CREATE USER alfresco WITH PASSWORD 'alfresco';
+GRANT ALL PRIVILEGES ON DATABASE alfresco TO alfresco;
+EOF
+
+# Executar o instalador do Alfresco
+sudo ./alfresco-content-services-community-7.4-installer-linux-x64.bin --mode unattended --prefix /opt/alfresco
+
+# Ajustar permissões e iniciar o serviço
+sudo chown -R alfresco:alfresco /opt/alfresco
+cd /opt/alfresco
+sudo -u alfresco ./alfresco.sh start
+
+# Configurar firewall para permitir acesso ao Alfresco
+sudo ufw allow 8080
+sudo ufw enable
